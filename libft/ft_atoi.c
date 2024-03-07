@@ -6,7 +6,7 @@
 /*   By: seohyeki <seohyeki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 13:36:49 by seohyeki          #+#    #+#             */
-/*   Updated: 2024/02/26 13:09:52 by seohyeki         ###   ########.fr       */
+/*   Updated: 2024/03/06 14:37:17 by seohyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,7 @@ int	ft_atoi(const char *str)
 		num = num * 10 + *str - '0';
 		str++;
 	}
+	if (*str != '\0')
+		num = 0;
 	return (sign * num);
 }

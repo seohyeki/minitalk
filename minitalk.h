@@ -6,7 +6,7 @@
 /*   By: seohyeki <seohyeki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 21:47:01 by seohyeki          #+#    #+#             */
-/*   Updated: 2024/02/23 15:57:04 by seohyeki         ###   ########.fr       */
+/*   Updated: 2024/03/06 14:52:31 by seohyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 # define MINITALK_H
 
 # include <signal.h>
-# include <unistd.h>
 # include "libft/libft.h"
 
 typedef struct s_sigdata
 {
 	size_t	count;
 	char	c;
+	int		signum;
+	pid_t	client_pid;
 }	t_sigdata;
 
 #endif

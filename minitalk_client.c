@@ -6,11 +6,13 @@
 /*   By: seohyeki <seohyeki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 22:14:33 by seohyeki          #+#    #+#             */
-/*   Updated: 2024/02/26 13:14:56 by seohyeki         ###   ########.fr       */
+/*   Updated: 2024/03/06 14:45:17 by seohyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+
+int	g_signum;
 
 static void	send_signal(pid_t pid, char c)
 {
@@ -20,12 +22,28 @@ static void	send_signal(pid_t pid, char c)
 	while (n < 8)
 	{
 		if ((c & (1 << n)) == 0)
-			kill(pid, SIGUSR1);
+		{
+			if (kill(pid, SIGUSR1) == -1)
+				exit(1);
+		}
 		else
-			kill(pid, SIGUSR2);
+		{
+			if (kill(pid, SIGUSR2) == -1)
+				exit(1);
+		}
 		n++;
-		usleep(100);
+		while (g_signum == 0)
+			;
+		g_signum = 0;
 	}
+}
+
+static void	handler(int sig)
+{
+	if (sig == SIGUSR1)
+		exit(0);
+	if (sig == SIGUSR2)
+		g_signum = 1;
 }
 
 int	main(int argc, char *argv[])
@@ -33,13 +51,16 @@ int	main(int argc, char *argv[])
 	pid_t	server_pid;
 	size_t	i;
 
-	server_pid = ft_atoi(argv[1]);
 	i = 0;
 	if (argc != 3)
-	{
-		ft_printf("error\n");
-		return (0);
-	}
+		return (1);
+	server_pid = ft_atoi(argv[1]);
+	if (server_pid <= 0)
+		return (1);
+	if (signal(SIGUSR1, &handler) == SIG_ERR)
+		return (1);
+	if (signal(SIGUSR2, &handler) == SIG_ERR)
+		return (1);
 	while (argv[2][i])
 	{
 		send_signal(server_pid, argv[2][i]);
